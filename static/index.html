@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CBT Note は認知行動療法（CBT）の思考記録をブラウザで行える無料Webアプリです。気分・自動思考・適応的思考を記録して、考え方のクセを見直しましょう。" />
+  <meta property="og:title" content="CBT Note — 思考記録アプリ" />
+  <meta property="og:description" content="認知行動療法の思考記録を、ブラウザで手軽に。無料・登録不要・データはあなたのデバイスに保存。" />
+  <title>CBT Note — 思考を記録する、心を整える。</title>
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f4ee;
+      --surface: #fffefb;
+      --border: #d8d0c0;
+      --accent: #5a7a5a;
+      --accent-light: #8aaa7a;
+      --accent-muted: #d4e0d4;
+      --text: #2a2a20;
+      --text-muted: #7a7568;
+      --warm: #c08030;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(247,244,238,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--accent); text-decoration: none;
+      letter-spacing: 0.06em;
+    }
+    .nav-links { display: flex; gap: 24px; align-items: center; }
+    .nav-links a {
+      text-decoration: none; color: var(--text-muted);
+      font-size: 0.88rem; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      background: var(--accent); color: #fff !important;
+      padding: 8px 20px; border-radius: 20px;
+      font-weight: 700 !important; font-size: 0.88rem !important;
+      transition: background 0.2s, transform 0.1s !important;
+    }
+    .nav-cta:hover { background: #4a6a4a !important; transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 90vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 60px 24px;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 30% 40%, rgba(90,122,90,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 70% 60%, rgba(192,128,48,0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      background: var(--accent-muted);
+      color: var(--accent);
+      font-size: 0.78rem; font-weight: 700;
+      letter-spacing: 0.12em;
+      padding: 5px 16px; border-radius: 20px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero h1 {
+      font-family: 'Shippori Mincho', serif;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      margin-bottom: 20px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero-sub {
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      color: var(--text-muted);
+      max-width: 520px;
+      margin-bottom: 40px;
+      line-height: 1.8;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+    .hero-actions {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #fff;
+      padding: 14px 32px; border-radius: 8px;
+      font-size: 1rem; font-weight: 700;
+      text-decoration: none; letter-spacing: 0.04em;
+      box-shadow: 0 4px 20px rgba(90,122,90,0.3);
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      background: #4a6a4a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(90,122,90,0.35);
+    }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--text-muted);
+      padding: 14px 28px; border-radius: 8px;
+      font-size: 1rem; font-weight: 500;
+      text-decoration: none;
+      border: 1.5px solid var(--border);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-note {
+      font-size: 0.78rem; color: var(--text-muted);
+      margin-top: 16px;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+
+    /* ── FEATURES ── */
+    .section { padding: 80px 24px; max-width: 900px; margin: 0 auto; }
+    .section-label {
+      text-align: center;
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--accent); letter-spacing: 0.14em;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Shippori Mincho', serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 600; text-align: center;
+      margin-bottom: 48px; letter-spacing: 0.04em;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px 24px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .feature-card:hover {
+      box-shadow: 0 8px 32px rgba(60,55,40,0.12);
+      transform: translateY(-3px);
+    }
+    .feature-icon {
+      font-size: 2rem; margin-bottom: 14px; display: block;
+    }
+    .feature-card h3 {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.1rem; font-weight: 600;
+      margin-bottom: 8px; color: var(--text);
+    }
+    .feature-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; }
+
+    /* ── STEPS ── */
+    .steps-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 24px;
+    }
+    .steps-inner { max-width: 700px; margin: 0 auto; }
+    .step-list { display: flex; flex-direction: column; gap: 16px; margin-top: 40px; }
+    .step-item {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 20px;
+      background: var(--bg);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .step-num {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: var(--accent-muted);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.9rem;
+      font-family: 'Shippori Mincho', serif;
+    }
+    .step-item h4 {
+      font-weight: 700; font-size: 0.95rem;
+      margin-bottom: 4px; color: var(--text);
+    }
+    .step-item p { font-size: 0.84rem; color: var(--text-muted); }
+
+    /* ── BOOKS (Amazon アソシエイト) ── */
+    .books-section { padding: 80px 24px; max-width: 900px; margin: 0 auto; }
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .book-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-decoration: none; color: var(--text);
+      transition: box-shadow 0.2s, transform 0.15s;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .book-card:hover {
+      box-shadow: 0 6px 24px rgba(60,55,40,0.12);
+      transform: translateY(-2px);
+    }
+    .book-cover {
+      width: 100%; aspect-ratio: 3/4;
+      background: var(--accent-muted);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem;
+      margin-bottom: 4px;
+    }
+    .book-title { font-weight: 700; font-size: 0.88rem; line-height: 1.4; }
+    .book-author { font-size: 0.78rem; color: var(--text-muted); }
+    .book-badge {
+      display: inline-block;
+      background: #f0e8d0; color: var(--warm);
+      font-size: 0.72rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 4px;
+      width: fit-content;
+    }
+    .affiliate-note {
+      font-size: 0.75rem; color: var(--text-muted);
+      margin-top: 16px; text-align: center;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      padding: 80px 24px;
+      background: var(--accent);
+      color: #fff;
+    }
+    .cta-section h2 {
+      font-family: 'Shippori Mincho', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 600;
+      margin-bottom: 12px; letter-spacing: 0.04em;
+    }
+    .cta-section p {
+      font-size: 0.95rem; opacity: 0.85;
+      margin-bottom: 32px;
+    }
+    .btn-white {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; color: var(--accent);
+      padding: 14px 36px; border-radius: 8px;
+      font-size: 1rem; font-weight: 700;
+      text-decoration: none; letter-spacing: 0.04em;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.2); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: rgba(255,255,255,0.6);
+      padding: 32px 24px;
+      text-align: center;
+      font-size: 0.82rem;
+    }
+    footer a { color: rgba(255,255,255,0.75); text-decoration: none; }
+    footer a:hover { color: #fff; }
+    .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 40px; height: 2px;
+      background: var(--accent-muted);
+      margin: 0 auto 20px;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .nav-links { gap: 14px; }
+      .features-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">📖 CBT Note</a>
+  <div class="nav-links">
+    <a href="/about/">CBTとは？</a>
+    <a href="/app/" class="nav-cta">アプリを使う →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <span class="hero-eyebrow">認知行動療法 × 思考記録</span>
+  <h1>思考を記録する、<br><em>心を整える。</em></h1>
+  <p class="hero-sub">
+    CBT Note は、認知行動療法（CBT）の「思考記録」をブラウザで手軽に続けられる無料Webアプリです。
+    登録不要、データはあなたのデバイスに保存されます。
+  </p>
+  <div class="hero-actions">
+    <a href="/app/" class="btn-primary">▶ 今すぐ使う（無料）</a>
+    <a href="/about/" class="btn-ghost">CBTとは？</a>
+  </div>
+  <p class="hero-note">アカウント登録不要・完全無料・データはブラウザに保存</p>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <p class="section-label">FEATURES</p>
+  <div class="divider"></div>
+  <h2 class="section-title">CBT Note の特徴</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">🔒</span>
+      <h3>データはあなただけのもの</h3>
+      <p>入力した内容はすべてお使いのブラウザ（ローカルストレージ）に保存。外部サーバーには一切送信されません。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📋</span>
+      <h3>CBTの7ステップに沿った記録</h3>
+      <p>状況・気分・自動思考・根拠・反証・適応的思考・再評価の流れをウィザード形式でガイドします。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📊</span>
+      <h3>気分の変化を確認</h3>
+      <p>記録前後の気分レベルを比較できます。思考記録を続けることで、自分の感情パターンへの気づきが深まります。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📤</span>
+      <h3>CSVで管理・バックアップ</h3>
+      <p>記録はCSV形式でエクスポート・インポートが可能。大切なデータを安全に保管できます。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">💻</span>
+      <h3>PC・スマホどちらでも</h3>
+      <p>Webアプリなのでインストール不要。PCでじっくり入力も、スマホでサッと記録も、どちらにも対応しています。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🆓</span>
+      <h3>完全無料・登録不要</h3>
+      <p>アカウント作成もメールアドレスの登録も不要。ページを開いてすぐに使い始められます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="steps-section">
+  <div class="steps-inner">
+    <p class="section-label">HOW IT WORKS</p>
+    <div class="divider"></div>
+    <h2 class="section-title">7ステップで思考記録</h2>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">①</div>
+        <div>
+          <h4>状況</h4>
+          <p>いつ・どこで・だれが関わった出来事かを記録します。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">②</div>
+        <div>
+          <h4>気分</h4>
+          <p>そのときどんな気分を感じたか。気分の種類と強さ（0〜100%）を記録します。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">③</div>
+        <div>
+          <h4>自動思考</h4>
+          <p>気分を感じた直前に頭に浮かんだ考えやイメージを書き出します。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">④</div>
+        <div>
+          <h4>根拠</h4>
+          <p>自動思考を裏付ける客観的な事実を探します。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">⑤</div>
+        <div>
+          <h4>反証</h4>
+          <p>自動思考と矛盾する事実・別の見方を書き出します。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">⑥</div>
+        <div>
+          <h4>適応的思考</h4>
+          <p>根拠と反証を踏まえた、よりバランスの取れた考えを描きます。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">⑦</div>
+        <div>
+          <h4>気分の再評価</h4>
+          <p>思考記録を経て、気分のレベルが変化したかを確認します。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKS (Amazon アソシエイト) -->
+<section class="books-section">
+  <p class="section-label">RECOMMENDED BOOKS</p>
+  <div class="divider"></div>
+  <h2 class="section-title">CBTをもっと深く学ぶ</h2>
+  <div class="books-grid">
+    <a href="https://amzn.to/XXXXXXX" class="book-card" target="_blank" rel="noopener">
+      <div class="book-cover">📗</div>
+      <span class="book-badge">定番入門書</span>
+      <p class="book-title">いやな気分よ、さようなら — デビッド・D・バーンズ</p>
+      <p class="book-author">David D. Burns 著</p>
+    </a>
+    <a href="https://amzn.to/XXXXXXX" class="book-card" target="_blank" rel="noopener">
+      <div class="book-cover">📘</div>
+      <span class="book-badge">実践ワーク</span>
+      <p class="book-title">認知行動療法のセルフヘルプ入門</p>
+      <p class="book-author">マーティン・M・アントニー 著</p>
+    </a>
+    <a href="https://amzn.to/XXXXXXX" class="book-card" target="_blank" rel="noopener">
+      <div class="book-cover">📙</div>
+      <span class="book-badge">わかりやすい</span>
+      <p class="book-title">図解　やさしくわかる認知行動療法</p>
+      <p class="book-author">福井至・貝谷久宣 監修</p>
+    </a>
+  </div>
+  <p class="affiliate-note">
+    ※ 上記リンクはAmazonアソシエイトリンクです。購入いただくとサイト運営の支援になります（価格はAmazon通常価格と同じです）。
+  </p>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>今日から、思考記録を始めよう。</h2>
+  <p>登録不要・無料・すぐに使えます。</p>
+  <a href="/app/" class="btn-white">▶ アプリを開く</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="/">ホーム</a>
+    <a href="/about/">CBTとは？</a>
+    <a href="/privacy/">プライバシーポリシー</a>
+    <a href="/app/">アプリを使う</a>
+  </div>
+  <p>© 2025 CBT Note　このアプリは医療行為ではありません。深刻な悩みは専門家にご相談ください。</p>
+</footer>
+
+</body>
+</html>
