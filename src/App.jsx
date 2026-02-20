@@ -880,7 +880,7 @@ function HomeView({ records, onNew, onSelect, activeMoods }) {
 
       {/* Info links */}
       <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
-        <a href="/about/" style={{
+        <a href="/cbt-note/about/" style={{
           flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
           padding: "10px 12px", borderRadius: 8,
           border: "1.5px solid var(--border)", background: "var(--surface)",
