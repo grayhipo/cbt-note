@@ -28,9 +28,10 @@ jobs:
       - name: Copy static pages into dist/
         run: |
           cp static/index.html dist/index.html
-          mkdir -p dist/about dist/privacy
+          mkdir -p dist/about dist/privacy dist/books
           cp static/about/index.html dist/about/index.html
           cp static/privacy/index.html dist/privacy/index.html
+          cp static/books/index.html dist/books/index.html
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
