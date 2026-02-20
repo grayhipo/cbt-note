@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="認知行動療法（CBT）を深く学べるおすすめ書籍を紹介します。入門書から実践ワークブックまで、目的別に厳選。" />
+  <title>CBT おすすめ書籍 | CBT Note</title>
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f4ee;
+      --surface: #fffefb;
+      --border: #d8d0c0;
+      --accent: #5a7a5a;
+      --accent-muted: #d4e0d4;
+      --text: #2a2a20;
+      --text-muted: #7a7568;
+      --warm: #c08030;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      line-height: 1.8;
+    }
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(247,244,238,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--accent); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a {
+      text-decoration: none; color: var(--text-muted);
+      font-size: 0.88rem; font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      background: var(--accent); color: #fff !important;
+      padding: 8px 18px; border-radius: 20px; font-weight: 700 !important;
+    }
+
+    .page-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 60px 24px 40px;
+      text-align: center;
+    }
+    .page-label {
+      display: inline-block;
+      background: var(--accent-muted); color: var(--accent);
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.12em;
+      padding: 4px 14px; border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .page-header h1 {
+      font-family: 'Shippori Mincho', serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800; letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+    .page-header p { color: var(--text-muted); font-size: 0.95rem; max-width: 500px; margin: 0 auto; }
+
+    .content { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .category-title {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.3rem; font-weight: 600;
+      color: var(--text);
+      margin: 48px 0 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--accent-muted);
+      letter-spacing: 0.04em;
+    }
+    .category-title:first-child { margin-top: 0; }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .book-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-decoration: none; color: var(--text);
+      transition: box-shadow 0.2s, transform 0.15s;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .book-card:hover {
+      box-shadow: 0 8px 28px rgba(60,55,40,0.13);
+      transform: translateY(-3px);
+    }
+    .book-cover {
+      width: 100%; aspect-ratio: 3/4;
+      background: var(--accent-muted);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+      margin-bottom: 4px;
+    }
+    .book-badge {
+      display: inline-block;
+      background: #f0e8d0; color: var(--warm);
+      font-size: 0.72rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 4px;
+      width: fit-content;
+    }
+    .book-title {
+      font-weight: 700; font-size: 0.92rem;
+      line-height: 1.5; color: var(--text);
+    }
+    .book-author { font-size: 0.8rem; color: var(--text-muted); }
+    .book-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+    .book-amazon {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: auto;
+      background: #FF9900; color: #fff;
+      font-size: 0.82rem; font-weight: 700;
+      padding: 8px 14px; border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .book-amazon:hover { background: #e68900; }
+
+    .affiliate-note {
+      font-size: 0.78rem; color: var(--text-muted);
+      margin-top: 40px;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      line-height: 1.7;
+    }
+
+    footer {
+      background: var(--text); color: rgba(255,255,255,0.6);
+      padding: 28px 24px; text-align: center; font-size: 0.82rem;
+    }
+    footer a { color: rgba(255,255,255,0.75); text-decoration: none; margin: 0 10px; }
+    footer a:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">📖 CBT Note</a>
+  <div class="nav-links">
+    <a href="/about/">CBTとは？</a>
+    <a href="/books/">おすすめ書籍</a>
+    <a href="/app/" class="nav-cta">アプリを使う →</a>
+  </div>
+</nav>
+
+<header class="page-header">
+  <span class="page-label">RECOMMENDED BOOKS</span>
+  <h1>CBT おすすめ書籍</h1>
+  <p>認知行動療法をもっと深く学べる書籍を、目的別に厳選しました。</p>
+</header>
+
+<div class="content">
+
+  <h2 class="category-title">📗 まず1冊読むなら</h2>
+  <div class="books-grid">
+    <a href="https://amzn.to/XXXXXXX" class="book-card" target="_blank" rel="noopener sponsored">
+      <div class="book-cover">📗</div>
+      <span class="book-badge">定番入門書</span>
+      <p class="book-title">いやな気分よ、さようなら</p>
+      <p class="book-author">デビッド・D・バーンズ 著</p>
+      <p class="book-desc">CBTの古典的名著。認知の歪みを具体的なワークで修正する方法を、豊富な事例とともに解説。世界中で読まれているセルフヘルプの決定版。</p>
+      <span class="book-amazon">Amazonで見る →</span>
+    </a>
+    <a href="https://amzn.to/XXXXXXX" class="book-card" target="_blank" rel="noopener sponsored">
+      <div class="book-cover">📘</div>
+      <span class="book-badge">わかりやすい</span>
+      <p class="book-title">図解 やさしくわかる認知行動療法</p>
+      <p class="book-author">福井至・貝谷久宣 監修</p>
+      <p class="book-desc">イラストと図解でCBTの基本を視覚的に理解できる入門書。専門用語が少なく、CBTを初めて学ぶ方に最適。</p>
+      <span class="book-amazon">Amazonで見る →</span>
+    </a>
+  </div>
+
+  <h2 class="category-title">📝 実践・ワークブック</h2>
+  <div class="books-grid">
+    <a href="https://amzn.to/XXXXXXX" class="book-card" target="_blank" rel="noopener sponsored">
+      <div class="book-cover">📙</div>
+      <span class="book-badge">実践ワーク</span>
+      <p class="book-title">認知行動療法のセルフヘルプ入門</p>
+      <p class="book-author">マーティン・M・アントニー 著</p>
+      <p class="book-desc">ワーク形式で実際に書き込みながら進められる実践書。不安・気分の落ち込み・怒りなど症状別に対処法を解説。</p>
+      <span class="book-amazon">Amazonで見る →</span>
+    </a>
+    <a href="https://amzn.to/XXXXXXX" class="book-card" target="_blank" rel="noopener sponsored">
+      <div class="book-cover">📒</div>
+      <span class="book-badge">書き込み式</span>
+      <p class="book-title">こころが晴れるノート</p>
+      <p class="book-author">大野裕 著</p>
+      <p class="book-desc">日本の精神科医が書いたCBTワークブック。思考記録の書き方をやさしく解説し、日常生活で実践しやすい構成になっています。</p>
+      <span class="book-amazon">Amazonで見る →</span>
+    </a>
+  </div>
+
+  <h2 class="category-title">🧠 もっと深く学ぶ</h2>
+  <div class="books-grid">
+    <a href="https://amzn.to/XXXXXXX" class="book-card" target="_blank" rel="noopener sponsored">
+      <div class="book-cover">📕</div>
+      <span class="book-badge">マインドフルネス</span>
+      <p class="book-title">マインドフルネスストレス低減法</p>
+      <p class="book-author">ジョン・カバットジン 著</p>
+      <p class="book-desc">CBTと親和性の高いマインドフルネスの原典。瞑想と身体への気づきを通じてストレスを低減する方法を学べます。</p>
+      <span class="book-amazon">Amazonで見る →</span>
+    </a>
+    <a href="https://amzn.to/XXXXXXX" class="book-card" target="_blank" rel="noopener sponsored">
+      <div class="book-cover">📓</div>
+      <span class="book-badge">ACT入門</span>
+      <p class="book-title">ACTをはじめる</p>
+      <p class="book-author">スティーブン・C・ヘイズ 著</p>
+      <p class="book-desc">CBTの進化形であるアクセプタンス＆コミットメント・セラピー（ACT）の入門書。思考との関わり方を根本から見直します。</p>
+      <span class="book-amazon">Amazonで見る →</span>
+    </a>
+  </div>
+
+  <p class="affiliate-note">
+    ※ 上記リンクはAmazonアソシエイト・プログラムを利用したアフィリエイトリンクです。リンク経由でご購入いただいた場合、サイト運営の支援となる紹介料を受け取ることがあります。お客様が支払う価格はAmazonの通常価格と変わりません。<br>
+    ※ リンクのURLは仮のものです。Amazonアソシエイト登録後に正しいリンクに差し替えてください。
+  </p>
+
+</div>
+
+<footer>
+  <div style="margin-bottom:12px">
+    <a href="/">ホーム</a>
+    <a href="/about/">CBTとは？</a>
+    <a href="/books/">おすすめ書籍</a>
+    <a href="/privacy/">プライバシーポリシー</a>
+    <a href="/app/">アプリ</a>
+  </div>
+  <p>© 2025 CBT Note　このアプリは医療行為ではありません。</p>
+</footer>
+
+</body>
+</html>
