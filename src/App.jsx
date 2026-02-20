@@ -1047,7 +1047,7 @@ export default function App() {
             {(view === "new" || view === "detail") && (
               <button onClick={() => setView("home")} style={{ background: "none", border: "none", fontSize: "1.2rem", color: "var(--text-muted)", padding: "0 4px" }}>←</button>
             )}
-            <a href="/" style={{ ...CSS.headerTitle, textDecoration: "none" }}>思考記録</a>
+            <a href="/cbt-note/" style={{ ...CSS.headerTitle, textDecoration: "none" }}>思考記録</a>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {view === "new" && (
