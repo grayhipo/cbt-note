@@ -871,12 +871,40 @@ function HomeView({ records, onNew, onSelect, activeMoods }) {
       <button onClick={onNew} style={{
         ...CSS.btn, ...CSS.btnPrimary,
         width: "100%", padding: "14px 20px", fontSize: "1rem",
-        borderRadius: "var(--radius)", marginBottom: 20,
+        borderRadius: "var(--radius)", marginBottom: 12,
         boxShadow: "0 4px 16px rgba(90,122,90,0.25)",
         letterSpacing: "0.06em"
       }}>
         ＋ 新しい記録を始める
       </button>
+
+      {/* Info links */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
+        <a href="/about/" style={{
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          padding: "10px 12px", borderRadius: 8,
+          border: "1.5px solid var(--border)", background: "var(--surface)",
+          color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 500,
+          textDecoration: "none", transition: "border-color 0.15s, color 0.15s"
+        }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.color = "var(--accent)"; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-muted)"; }}
+        >
+          🧠 CBTとは？
+        </a>
+        <a href="/books/" style={{
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          padding: "10px 12px", borderRadius: 8,
+          border: "1.5px solid var(--border)", background: "var(--surface)",
+          color: "var(--text-muted)", fontSize: "0.85rem", fontWeight: 500,
+          textDecoration: "none", transition: "border-color 0.15s, color 0.15s"
+        }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--accent)"; e.currentTarget.style.color = "var(--accent)"; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.color = "var(--text-muted)"; }}
+        >
+          📚 おすすめ書籍
+        </a>
+      </div>
 
       {records.length === 0 ? (
         <div style={{ textAlign: "center", color: "var(--text-muted)", marginTop: 60, lineHeight: 2 }}>
