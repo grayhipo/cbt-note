@@ -892,7 +892,7 @@ function HomeView({ records, onNew, onSelect, activeMoods }) {
         >
           🧠 CBTとは？
         </a>
-        <a href="/books/" style={{
+        <a href="/cbt-note/books/" style={{
           flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
           padding: "10px 12px", borderRadius: 8,
           border: "1.5px solid var(--border)", background: "var(--surface)",
