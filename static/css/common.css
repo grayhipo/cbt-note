@@ -1,0 +1,102 @@
+/* ── Google Fonts ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
+
+/* ── Reset & Variables ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f4ee;
+  --surface: #fffefb;
+  --border: #d8d0c0;
+  --accent: #5a7a5a;
+  --accent-light: #8aaa7a;
+  --accent-muted: #d4e0d4;
+  --text: #2a2a20;
+  --text-muted: #7a7568;
+  --warm: #c08030;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Zen Kaku Gothic New', sans-serif;
+  line-height: 1.8;
+}
+
+/* ── Nav ───────────────────────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(247,244,238,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.nav-logo {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 0.9rem; font-weight: 600;
+  color: var(--accent); text-decoration: none;
+  letter-spacing: 0.06em;
+}
+
+.nav-links { display: flex; gap: 15px; align-items: center; }
+
+.nav-links a {
+  text-decoration: none; color: var(--text-muted);
+  font-size: 0.85rem; font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+
+.nav-cta {
+  background: var(--accent); color: #fff !important;
+  padding: 8px 20px; border-radius: 20px;
+  font-weight: 700 !important; font-size: 0.88rem !important;
+  transition: background 0.2s, transform 0.1s !important;
+}
+
+.nav-cta:hover { background: #4a6a4a !important; transform: translateY(-1px); }
+
+/* ── Page Header (shared by about/books/privacy) ───────────────────────────── */
+.page-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 60px 24px 40px;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800; letter-spacing: 0.04em;
+  margin-bottom: 12px;
+}
+
+.page-header p { color: var(--text-muted); font-size: 0.95rem; max-width: 500px; margin: 0 auto; }
+
+.page-label {
+  display: inline-block;
+  background: var(--accent-muted); color: var(--accent);
+  font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 4px 14px; border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+/* ── Footer ────────────────────────────────────────────────────────────────── */
+footer {
+  background: var(--text);
+  color: rgba(255,255,255,0.6);
+  padding: 28px 24px;
+  text-align: center;
+  font-size: 0.82rem;
+}
+
+footer a { color: rgba(255,255,255,0.75); text-decoration: none; margin: 0 10px; }
+footer a:hover { color: #fff; }
+
+.footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
