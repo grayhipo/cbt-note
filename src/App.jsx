@@ -1,101 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-
-// ── Google Fonts injected via style tag ──────────────────────────────────────
-const FontStyle = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Shippori+Mincho:wght@400;600&display=swap');
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #f7f4ee;
-      --surface: #fffefb;
-      --surface2: #f0ede5;
-      --border: #d8d0c0;
-      --accent: #5a7a5a;
-      --accent-light: #8aaa7a;
-      --accent-muted: #d4e0d4;
-      --text: #2a2a20;
-      --text-muted: #7a7568;
-      --danger: #c0604a;
-      --warn: #c08030;
-      --radius: 12px;
-      --shadow: 0 2px 12px rgba(60,55,40,0.10);
-    }
-    body { background: var(--bg); color: var(--text); font-family: 'Zen Kaku Gothic New', sans-serif; }
-    ::placeholder { color: var(--text-muted); opacity: 0.7; }
-    textarea, input { font-family: inherit; font-size: 0.95rem; color: var(--text); }
-    textarea:focus, input:focus { outline: none; }
-    button { font-family: inherit; cursor: pointer; }
-    * { transition: box-shadow 0.15s, border-color 0.15s, background 0.15s; }
-    .slide-in { animation: slideIn 0.3s ease; }
-    @keyframes slideIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    .drawer-overlay { position: fixed; inset: 0; background: rgba(42,42,32,0.35); z-index: 100; animation: fadeIn 0.2s ease; }
-    .drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(320px, 88vw); background: var(--surface); z-index: 101; box-shadow: -4px 0 24px rgba(60,55,40,0.18); animation: slideRight 0.25s ease; display: flex; flex-direction: column; }
-    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-    @keyframes slideRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
-    .drawer-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; font-size: 0.95rem; font-weight: 500; color: var(--text); border: none; background: none; text-align: left; cursor: pointer; border-bottom: 1px solid var(--border); width: 100%; font-family: inherit; }
-    .drawer-item:hover { background: var(--surface2); }
-    .drawer-item:disabled { opacity: 0.4; cursor: not-allowed; }
-    .drawer-item label { display: flex; align-items: center; gap: 12px; cursor: pointer; width: 100%; }
-  `}</style>
-);
-
-const CSS = {
-  app: { minHeight: "100vh", background: "var(--bg)", padding: "0 0 80px" },
-  header: {
-    background: "var(--surface)",
-    borderBottom: "1px solid var(--border)",
-    padding: "16px 20px",
-    display: "flex", alignItems: "center", justifyContent: "space-between",
-    position: "sticky", top: 0, zIndex: 10,
-    boxShadow: "0 1px 8px rgba(60,55,40,0.06)"
-  },
-  headerTitle: { fontFamily: "'Shippori Mincho', serif", fontSize: "1.2rem", fontWeight: 600, color: "var(--accent)", letterSpacing: "0.04em" },
-  card: { background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", boxShadow: "var(--shadow)", padding: "20px", marginBottom: "12px" },
-  input: {
-    width: "100%", padding: "10px 14px",
-    background: "var(--surface2)", border: "1.5px solid var(--border)",
-    borderRadius: 8, fontSize: "0.95rem", lineHeight: 1.5,
-    "&:focus": { borderColor: "var(--accent)" }
-  },
-  textarea: {
-    width: "100%", padding: "10px 14px",
-    background: "var(--surface2)", border: "1.5px solid var(--border)",
-    borderRadius: 8, fontSize: "0.95rem", lineHeight: 1.6,
-    resize: "vertical", minHeight: 100,
-  },
-  label: { display: "block", fontSize: "0.82rem", color: "var(--text-muted)", marginBottom: 6, fontWeight: 500, letterSpacing: "0.04em" },
-  btn: {
-    padding: "10px 22px", borderRadius: 8, border: "none",
-    fontWeight: 700, fontSize: "0.92rem", letterSpacing: "0.03em",
-  },
-  btnPrimary: { background: "var(--accent)", color: "#fff" },
-  btnGhost: { background: "transparent", color: "var(--text-muted)", border: "1.5px solid var(--border)" },
-  btnDanger: { background: "transparent", color: "var(--danger)", border: "1.5px solid var(--danger)", padding: "6px 14px", fontSize: "0.82rem" },
-  btnSmall: { padding: "6px 14px", fontSize: "0.82rem", borderRadius: 6 },
-  stepTitle: { fontFamily: "'Shippori Mincho', serif", fontSize: "1.3rem", fontWeight: 600, color: "var(--accent)", marginBottom: 4 },
-  stepSub: { fontSize: "0.83rem", color: "var(--text-muted)", marginBottom: 20, lineHeight: 1.6 },
-  fieldGroup: { marginBottom: 16 },
-  row: { display: "flex", gap: 10, alignItems: "center" },
-  chip: {
-    display: "inline-flex", alignItems: "center", gap: 4,
-    padding: "6px 14px", borderRadius: 20, border: "1.5px solid var(--border)",
-    fontSize: "0.85rem", fontWeight: 500, cursor: "pointer",
-    background: "var(--surface2)", color: "var(--text)",
-  },
-  chipActive: { background: "var(--accent-muted)", borderColor: "var(--accent)", color: "var(--accent)" },
-  slider: { width: "100%", accentColor: "var(--accent)", cursor: "pointer" },
-  badge: { display: "inline-block", padding: "2px 10px", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700 },
-  divider: { height: 1, background: "var(--border)", margin: "16px 0" },
-  floatBar: {
-    position: "fixed", bottom: 0, left: 0, right: 0,
-    background: "var(--surface)", borderTop: "1px solid var(--border)",
-    padding: "12px 20px", display: "flex", gap: 10, justifyContent: "flex-end",
-    boxShadow: "0 -2px 12px rgba(60,55,40,0.08)"
-  },
-};
+import './App.css';
 
 const DEFAULT_MOODS = ["不安", "無力感", "怒り", "悲しみ", "恥", "罪悪感", "孤独", "恐怖", "混乱", "落ち込み", "イライラ", "焦り"];
 
@@ -126,12 +30,13 @@ function getInitialForm() {
 // ── Input helpers ─────────────────────────────────────────────────────────────
 function Inp({ label, value, onChange, placeholder, type = "text" }) {
   return (
-    <div style={CSS.fieldGroup}>
-      {label && <label style={CSS.label}>{label}</label>}
+    <div className="field-group">
+      {label && <label className="lbl">{label}</label>}
       <input
         type={type} value={value} onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        style={{ ...CSS.input, display: "block", border: "1.5px solid var(--border)" }}
+        className="inp"
+        style={{ display: "block", border: "1.5px solid var(--border)" }}
         onFocus={e => e.target.style.borderColor = "var(--accent)"}
         onBlur={e => e.target.style.borderColor = "var(--border)"}
       />
@@ -141,12 +46,13 @@ function Inp({ label, value, onChange, placeholder, type = "text" }) {
 
 function Txta({ label, value, onChange, placeholder, rows = 4 }) {
   return (
-    <div style={CSS.fieldGroup}>
-      {label && <label style={CSS.label}>{label}</label>}
+    <div className="field-group">
+      {label && <label className="lbl">{label}</label>}
       <textarea
         value={value} onChange={e => onChange(e.target.value)}
         placeholder={placeholder} rows={rows}
-        style={{ ...CSS.textarea, display: "block", border: "1.5px solid var(--border)" }}
+        className="txta"
+        style={{ display: "block", border: "1.5px solid var(--border)" }}
         onFocus={e => e.target.style.borderColor = "var(--accent)"}
         onBlur={e => e.target.style.borderColor = "var(--border)"}
       />
@@ -157,9 +63,9 @@ function Txta({ label, value, onChange, placeholder, rows = 4 }) {
 function Slider({ value, onChange, label }) {
   return (
     <div>
-      {label && <label style={CSS.label}>{label}</label>}
+      {label && <label className="lbl">{label}</label>}
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <input type="range" min={0} max={100} value={value} onChange={e => onChange(Number(e.target.value))} style={CSS.slider} />
+        <input type="range" min={0} max={100} value={value} onChange={e => onChange(Number(e.target.value))} className="slider" />
         <span style={{ minWidth: 44, textAlign: "right", fontWeight: 700, color: "var(--accent)", fontSize: "1rem" }}>{value}%</span>
       </div>
     </div>
@@ -171,25 +77,23 @@ function Step0({ data, setData }) {
   const s = data.situation;
   const upd = k => v => setData(d => ({ ...d, situation: { ...d.situation, [k]: v } }));
 
-  // Format ISO datetime-local value to human-readable for display in detail view
-  // Here we just store raw datetime-local string; detail view formats it
   function handleDateTimeChange(raw) {
-    upd("when")(raw); // e.g. "2024-03-15T15:00"
+    upd("when")(raw);
   }
 
   return (
     <div className="slide-in">
-      <div style={CSS.stepTitle}>① 状況</div>
-      <div style={CSS.stepSub}>記録する出来事の状況を書き留めましょう。</div>
+      <div className="step-title">① 状況</div>
+      <div className="step-sub">記録する出来事の状況を書き留めましょう。</div>
 
-      <div style={CSS.fieldGroup}>
-        <label style={CSS.label}>📅 いつ</label>
+      <div className="field-group">
+        <label className="lbl">📅 いつ</label>
         <input
           type="datetime-local"
           value={s.when}
           onChange={e => handleDateTimeChange(e.target.value)}
+          className="inp"
           style={{
-            ...CSS.input,
             display: "block",
             border: "1.5px solid var(--border)",
             colorScheme: "light",
@@ -234,8 +138,8 @@ function Step1({ data, setData, customMoods, setCustomMoods }) {
 
   return (
     <div className="slide-in">
-      <div style={CSS.stepTitle}>② 気分</div>
-      <div style={CSS.stepSub}>今どんな気分ですか？当てはまるものを選んでください。複数選択できます。</div>
+      <div className="step-title">② 気分</div>
+      <div className="step-sub">今どんな気分ですか？当てはまるものを選んでください。複数選択できます。</div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 20 }}>
         {allMoods.map(name => {
@@ -243,7 +147,8 @@ function Step1({ data, setData, customMoods, setCustomMoods }) {
           const isCustom = customMoods.includes(name);
           return (
             <button key={name} onClick={() => toggleMood(name)}
-              style={{ ...CSS.chip, ...(isSelected ? CSS.chipActive : {}), position: "relative" }}>
+              className={`chip${isSelected ? " chip-active" : ""}`}
+              style={{ position: "relative" }}>
               {isCustom && <span style={{ fontSize: "0.65rem", opacity: 0.6 }}>＊</span>}
               {name}
               {isSelected && <span style={{ marginLeft: 2 }}>✓</span>}
@@ -256,17 +161,18 @@ function Step1({ data, setData, customMoods, setCustomMoods }) {
         <input value={newMood} onChange={e => setNewMood(e.target.value)}
           placeholder="気分を追加..."
           onKeyDown={e => e.key === "Enter" && addCustomMood()}
-          style={{ ...CSS.input, flex: 1, border: "1.5px solid var(--border)" }}
+          className="inp"
+          style={{ flex: 1, border: "1.5px solid var(--border)" }}
           onFocus={e => e.target.style.borderColor = "var(--accent)"}
           onBlur={e => e.target.style.borderColor = "var(--border)"}
         />
-        <button onClick={addCustomMood} style={{ ...CSS.btn, ...CSS.btnPrimary, ...CSS.btnSmall }}>追加</button>
+        <button onClick={addCustomMood} className="btn btn-primary btn-small">追加</button>
       </div>
 
       {data.moods.length > 0 && (
         <>
-          <div style={CSS.divider} />
-          <div style={{ ...CSS.label, marginBottom: 12 }}>選んだ気分のレベルを設定してください</div>
+          <div className="divider" />
+          <div className="lbl" style={{ marginBottom: 12 }}>選んだ気分のレベルを設定してください</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {data.moods.map(m => (
               <div key={m.name} style={{ background: "var(--accent-muted)", borderRadius: 8, padding: "12px 14px" }}>
@@ -295,12 +201,12 @@ function Step2({ data, setData }) {
 
   return (
     <div className="slide-in">
-      <div style={CSS.stepTitle}>③ 自動思考</div>
-      <div style={CSS.stepSub}>気分を感じた直前に、頭の中に何が浮かんだか書いてください。<br />気分につながる主な考えには ◯ を付けましょう。</div>
+      <div className="step-title">③ 自動思考</div>
+      <div className="step-sub">気分を感じた直前に、頭の中に何が浮かんだか書いてください。<br />気分につながる主な考えには ◯ を付けましょう。</div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {data.automaticThoughts.map((t, i) => (
-          <div key={t.id} style={{ ...CSS.card, padding: 14, marginBottom: 0, position: "relative" }}>
+          <div key={t.id} className="card" style={{ padding: 14, marginBottom: 0, position: "relative" }}>
             <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
               <button
                 onClick={() => updThought(t.id, "isKey", !t.isKey)}
@@ -321,7 +227,8 @@ function Step2({ data, setData }) {
                   onChange={e => updThought(t.id, "text", e.target.value)}
                   placeholder={`思考 ${i + 1}：頭に浮かんだこと、イメージなど`}
                   rows={2}
-                  style={{ ...CSS.textarea, minHeight: 60, border: "1.5px solid var(--border)" }}
+                  className="txta"
+                  style={{ minHeight: 60, border: "1.5px solid var(--border)" }}
                   onFocus={e => e.target.style.borderColor = "var(--accent)"}
                   onBlur={e => e.target.style.borderColor = "var(--border)"}
                 />
@@ -338,7 +245,7 @@ function Step2({ data, setData }) {
         ))}
       </div>
 
-      <button onClick={addThought} style={{ ...CSS.btn, ...CSS.btnGhost, width: "100%", marginTop: 12, border: "1.5px dashed var(--border)" }}>
+      <button onClick={addThought} className="btn btn-ghost" style={{ width: "100%", marginTop: 12, border: "1.5px dashed var(--border)" }}>
         ＋ 思考を追加
       </button>
     </div>
@@ -350,8 +257,8 @@ function Step3({ data, setData }) {
   const keyThoughts = data.automaticThoughts.filter(t => t.isKey && t.text);
   return (
     <div className="slide-in">
-      <div style={CSS.stepTitle}>④ 根拠</div>
-      <div style={CSS.stepSub}>自動思考を裏付ける事実を書いてください。<br />「〜だから○○と思う」という客観的な事実を探しましょう。</div>
+      <div className="step-title">④ 根拠</div>
+      <div className="step-sub">自動思考を裏付ける事実を書いてください。<br />「〜だから○○と思う」という客観的な事実を探しましょう。</div>
       {keyThoughts.length > 0 && (
         <div style={{ background: "var(--accent-muted)", borderRadius: 8, padding: "10px 14px", marginBottom: 16 }}>
           <div style={{ fontSize: "0.78rem", color: "var(--accent)", fontWeight: 700, marginBottom: 6 }}>◯ 気分につながる考え</div>
@@ -369,8 +276,8 @@ function Step4({ data, setData }) {
   const keyThoughts = data.automaticThoughts.filter(t => t.isKey && t.text);
   return (
     <div className="slide-in">
-      <div style={CSS.stepTitle}>⑤ 反証</div>
-      <div style={CSS.stepSub}>自動思考と矛盾する事実を書いてください。<br />「○○だけど、△△という事実もある」という視点で。</div>
+      <div className="step-title">⑤ 反証</div>
+      <div className="step-sub">自動思考と矛盾する事実を書いてください。<br />「○○だけど、△△という事実もある」という視点で。</div>
       {keyThoughts.length > 0 && (
         <div style={{ background: "var(--surface2)", borderRadius: 8, padding: "10px 14px", marginBottom: 16, border: "1px solid var(--border)" }}>
           <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontWeight: 700, marginBottom: 6 }}>◯ 気分につながる考え</div>
@@ -397,23 +304,23 @@ function Step5({ data, setData }) {
 
   return (
     <div className="slide-in">
-      <div style={CSS.stepTitle}>⑥ 適応的思考</div>
-      <div style={CSS.stepSub}>根拠と反証を踏まえて、より現実的・バランスの取れた考えを書きましょう。<br />どの程度確信できるかも評価してください。</div>
+      <div className="step-title">⑥ 適応的思考</div>
+      <div className="step-sub">根拠と反証を踏まえて、より現実的・バランスの取れた考えを書きましょう。<br />どの程度確信できるかも評価してください。</div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         {data.adaptiveThoughts.map((t, i) => (
-          <div key={t.id} style={{ ...CSS.card, marginBottom: 0 }}>
+          <div key={t.id} className="card" style={{ marginBottom: 0 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
               <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--text-muted)" }}>思考 {i + 1}</span>
               <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                 <button
                   onClick={() => upd(t.id, "type", "new")}
-                  style={{ ...CSS.btn, ...CSS.btnSmall, ...(t.type === "new" ? CSS.btnPrimary : CSS.btnGhost) }}>
+                  className={`btn btn-small${t.type === "new" ? " btn-primary" : " btn-ghost"}`}>
                   まったく新しい考え
                 </button>
                 <button
                   onClick={() => upd(t.id, "type", "balanced")}
-                  style={{ ...CSS.btn, ...CSS.btnSmall, ...(t.type === "balanced" ? CSS.btnPrimary : CSS.btnGhost) }}>
+                  className={`btn btn-small${t.type === "balanced" ? " btn-primary" : " btn-ghost"}`}>
                   バランスの取れた考え
                 </button>
                 {data.adaptiveThoughts.length > 1 && (
@@ -425,7 +332,8 @@ function Step5({ data, setData }) {
               value={t.text} onChange={e => upd(t.id, "text", e.target.value)}
               placeholder={t.type === "new" ? "まったく別の視点から考えると..." : "根拠と反証を合わせて考えると..."}
               rows={3}
-              style={{ ...CSS.textarea, marginBottom: 12, border: "1.5px solid var(--border)" }}
+              className="txta"
+              style={{ marginBottom: 12, border: "1.5px solid var(--border)" }}
               onFocus={e => e.target.style.borderColor = "var(--accent)"}
               onBlur={e => e.target.style.borderColor = "var(--border)"}
             />
@@ -434,7 +342,7 @@ function Step5({ data, setData }) {
         ))}
       </div>
 
-      <button onClick={addThought} style={{ ...CSS.btn, ...CSS.btnGhost, width: "100%", marginTop: 12, border: "1.5px dashed var(--border)" }}>
+      <button onClick={addThought} className="btn btn-ghost" style={{ width: "100%", marginTop: 12, border: "1.5px dashed var(--border)" }}>
         ＋ 思考を追加
       </button>
     </div>
@@ -460,7 +368,7 @@ function Step6({ data, setData }) {
   if (data.moods.length === 0) {
     return (
       <div className="slide-in">
-        <div style={CSS.stepTitle}>⑦ 気分の再評価</div>
+        <div className="step-title">⑦ 気分の再評価</div>
         <div style={{ color: "var(--text-muted)", marginTop: 20 }}>② 気分の欄で気分が選択されていません。</div>
       </div>
     );
@@ -468,21 +376,20 @@ function Step6({ data, setData }) {
 
   return (
     <div className="slide-in">
-      <div style={CSS.stepTitle}>⑦ 気分の再評価</div>
-      <div style={CSS.stepSub}>適応的思考を経て、今の気分レベルを改めて評価してください。</div>
+      <div className="step-title">⑦ 気分の再評価</div>
+      <div className="step-sub">適応的思考を経て、今の気分レベルを改めて評価してください。</div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
         {data.moodReEvaluation.map(r => {
           const diff = r.after - r.before;
           return (
-            <div key={r.name} style={{ ...CSS.card, marginBottom: 0 }}>
+            <div key={r.name} className="card" style={{ marginBottom: 0 }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
                 <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--accent)" }}>{r.name}</span>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                   <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>最初：{r.before}%</span>
                   {diff !== 0 && (
-                    <span style={{
-                      ...CSS.badge,
+                    <span className="badge" style={{
                       background: diff < 0 ? "#d4eed4" : "#fde8e0",
                       color: diff < 0 ? "#3a7a3a" : "var(--danger)"
                     }}>
@@ -506,13 +413,13 @@ function RecordDetail({ record, onBack, onDelete }) {
   return (
     <div style={{ padding: "20px", maxWidth: 640, margin: "0 auto" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
-        <button onClick={onBack} style={{ ...CSS.btn, ...CSS.btnGhost, ...CSS.btnSmall }}>← 戻る</button>
+        <button onClick={onBack} className="btn btn-ghost btn-small">← 戻る</button>
         <span style={{ color: "var(--text-muted)", fontSize: "0.82rem" }}>{new Date(record.createdAt).toLocaleString("ja-JP")}</span>
-        <button onClick={onDelete} style={{ ...CSS.btn, ...CSS.btnDanger, marginLeft: "auto" }}>削除</button>
+        <button onClick={onDelete} className="btn btn-danger" style={{ marginLeft: "auto" }}>削除</button>
       </div>
 
       {/* 状況 */}
-      <div style={CSS.card}>
+      <div className="card">
         <div style={{ fontFamily: "'Shippori Mincho', serif", fontWeight: 600, color: "var(--accent)", marginBottom: 12 }}>① 状況</div>
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {s.when && <div><span style={{ color: "var(--text-muted)", fontSize: "0.82rem" }}>📅 いつ　　</span>{formatWhen(s.when)}</div>}
@@ -523,11 +430,11 @@ function RecordDetail({ record, onBack, onDelete }) {
 
       {/* 気分 */}
       {record.moods.length > 0 && (
-        <div style={CSS.card}>
+        <div className="card">
           <div style={{ fontFamily: "'Shippori Mincho', serif", fontWeight: 600, color: "var(--accent)", marginBottom: 12 }}>② 気分</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {record.moods.map(m => (
-              <div key={m.name} style={{ ...CSS.chip, ...CSS.chipActive }}>
+              <div key={m.name} className="chip chip-active">
                 {m.name} <strong>{m.level}%</strong>
               </div>
             ))}
@@ -537,7 +444,7 @@ function RecordDetail({ record, onBack, onDelete }) {
 
       {/* 自動思考 */}
       {record.automaticThoughts.some(t => t.text) && (
-        <div style={CSS.card}>
+        <div className="card">
           <div style={{ fontFamily: "'Shippori Mincho', serif", fontWeight: 600, color: "var(--accent)", marginBottom: 12 }}>③ 自動思考</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {record.automaticThoughts.filter(t => t.text).map(t => (
@@ -552,7 +459,7 @@ function RecordDetail({ record, onBack, onDelete }) {
 
       {/* 根拠 */}
       {record.evidence && (
-        <div style={CSS.card}>
+        <div className="card">
           <div style={{ fontFamily: "'Shippori Mincho', serif", fontWeight: 600, color: "var(--accent)", marginBottom: 8 }}>④ 根拠</div>
           <div style={{ lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{record.evidence}</div>
         </div>
@@ -560,7 +467,7 @@ function RecordDetail({ record, onBack, onDelete }) {
 
       {/* 反証 */}
       {record.counterEvidence && (
-        <div style={CSS.card}>
+        <div className="card">
           <div style={{ fontFamily: "'Shippori Mincho', serif", fontWeight: 600, color: "var(--accent)", marginBottom: 8 }}>⑤ 反証</div>
           <div style={{ lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{record.counterEvidence}</div>
         </div>
@@ -568,16 +475,16 @@ function RecordDetail({ record, onBack, onDelete }) {
 
       {/* 適応的思考 */}
       {record.adaptiveThoughts.some(t => t.text) && (
-        <div style={CSS.card}>
+        <div className="card">
           <div style={{ fontFamily: "'Shippori Mincho', serif", fontWeight: 600, color: "var(--accent)", marginBottom: 12 }}>⑥ 適応的思考</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {record.adaptiveThoughts.filter(t => t.text).map(t => (
               <div key={t.id} style={{ background: "var(--surface2)", borderRadius: 8, padding: "10px 14px" }}>
                 <div style={{ display: "flex", gap: 8, marginBottom: 6 }}>
-                  <span style={{ ...CSS.badge, background: "var(--accent-muted)", color: "var(--accent)" }}>
+                  <span className="badge" style={{ background: "var(--accent-muted)", color: "var(--accent)" }}>
                     {t.type === "new" ? "まったく新しい考え" : "バランスの取れた考え"}
                   </span>
-                  <span style={{ ...CSS.badge, background: "#e8f0e8", color: "var(--accent)" }}>確信度 {t.confidence}%</span>
+                  <span className="badge" style={{ background: "#e8f0e8", color: "var(--accent)" }}>確信度 {t.confidence}%</span>
                 </div>
                 <div style={{ lineHeight: 1.6 }}>{t.text}</div>
               </div>
@@ -588,7 +495,7 @@ function RecordDetail({ record, onBack, onDelete }) {
 
       {/* 気分の再評価 */}
       {record.moodReEvaluation.length > 0 && (
-        <div style={CSS.card}>
+        <div className="card">
           <div style={{ fontFamily: "'Shippori Mincho', serif", fontWeight: 600, color: "var(--accent)", marginBottom: 12 }}>⑦ 気分の再評価</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {record.moodReEvaluation.map(r => {
@@ -599,7 +506,7 @@ function RecordDetail({ record, onBack, onDelete }) {
                   <span style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>{r.before}% →</span>
                   <span style={{ fontWeight: 700, color: "var(--accent)" }}>{r.after}%</span>
                   {diff !== 0 && (
-                    <span style={{ ...CSS.badge, background: diff < 0 ? "#d4eed4" : "#fde8e0", color: diff < 0 ? "#3a7a3a" : "var(--danger)" }}>
+                    <span className="badge" style={{ background: diff < 0 ? "#d4eed4" : "#fde8e0", color: diff < 0 ? "#3a7a3a" : "var(--danger)" }}>
                       {diff > 0 ? `+${diff}` : diff}%
                     </span>
                   )}
@@ -837,7 +744,7 @@ function HamburgerMenu({ records, onExport, onImport, onClose, activeMoods, onMo
                 {activeMoods.length > 0 && (
                   <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
                     {activeMoods.map(name => (
-                      <span key={name} style={{ ...CSS.chip, ...CSS.chipActive, padding: "4px 10px", fontSize: "0.78rem" }}>
+                      <span key={name} className="chip chip-active" style={{ padding: "4px 10px", fontSize: "0.78rem" }}>
                         {name}
                         <button onClick={() => toggleMoodFilter(name)}
                           style={{ background: "none", border: "none", marginLeft: 4, cursor: "pointer", color: "var(--accent)", fontSize: "0.75rem", padding: 0 }}>
@@ -846,7 +753,7 @@ function HamburgerMenu({ records, onExport, onImport, onClose, activeMoods, onMo
                       </span>
                     ))}
                     <button onClick={() => onMoodsChange([])}
-                      style={{ ...CSS.btn, ...CSS.btnGhost, padding: "4px 10px", fontSize: "0.75rem" }}>
+                      className="btn btn-ghost" style={{ padding: "4px 10px", fontSize: "0.75rem" }}>
                       すべて解除
                     </button>
                   </div>
@@ -868,8 +775,7 @@ function HomeView({ records, onNew, onSelect, activeMoods }) {
 
   return (
     <div style={{ padding: "20px", maxWidth: 640, margin: "0 auto" }}>
-      <button onClick={onNew} style={{
-        ...CSS.btn, ...CSS.btnPrimary,
+      <button onClick={onNew} className="btn btn-primary" style={{
         width: "100%", padding: "14px 20px", fontSize: "1rem",
         borderRadius: "var(--radius)", marginBottom: 12,
         boxShadow: "0 4px 16px rgba(90,122,90,0.25)",
@@ -919,7 +825,7 @@ function HomeView({ records, onNew, onSelect, activeMoods }) {
         </div>
       ) : (
         <div>
-          <div style={{ ...CSS.label, marginBottom: 12, fontSize: "0.88rem" }}>
+          <div className="lbl" style={{ marginBottom: 12, fontSize: "0.88rem" }}>
             {activeMoods.length > 0 ? `${filtered.length} / ${records.length}件` : `${records.length}件`}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -928,7 +834,8 @@ function HomeView({ records, onNew, onSelect, activeMoods }) {
               const preview = [formatWhen(s.when), s.where, s.who].filter(Boolean).join("　");
               return (
                 <button key={r.id} onClick={() => onSelect(r)}
-                  style={{ ...CSS.card, textAlign: "left", cursor: "pointer", border: "1px solid var(--border)", width: "100%" }}
+                  className="card"
+                  style={{ textAlign: "left", cursor: "pointer", border: "1px solid var(--border)", width: "100%" }}
                   onMouseEnter={e => e.currentTarget.style.boxShadow = "0 4px 20px rgba(60,55,40,0.14)"}
                   onMouseLeave={e => e.currentTarget.style.boxShadow = "var(--shadow)"}
                 >
@@ -939,12 +846,12 @@ function HomeView({ records, onNew, onSelect, activeMoods }) {
                   {r.moods.length > 0 && (
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                       {r.moods.map(m => (
-                        <span key={m.name} style={{
-                          ...CSS.chip,
-                          ...(activeMoods.includes(m.name) ? CSS.chipActive : {}),
-                          padding: "3px 10px", fontSize: "0.78rem",
-                          fontWeight: activeMoods.includes(m.name) ? 700 : 500,
-                        }}>
+                        <span key={m.name}
+                          className={`chip${activeMoods.includes(m.name) ? " chip-active" : ""}`}
+                          style={{
+                            padding: "3px 10px", fontSize: "0.78rem",
+                            fontWeight: activeMoods.includes(m.name) ? 700 : 500,
+                          }}>
                           {m.name} {m.level}%
                         </span>
                       ))}
@@ -1038,98 +945,95 @@ export default function App() {
   if (!loaded) return <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", color: "var(--text-muted)" }}>読み込み中...</div>;
 
   return (
-    <>
-      <FontStyle />
-      <div style={CSS.app}>
-        {/* Header */}
-        <div style={CSS.header}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {(view === "new" || view === "detail") && (
-              <button onClick={() => setView("home")} style={{ background: "none", border: "none", fontSize: "1.2rem", color: "var(--text-muted)", padding: "0 4px" }}>←</button>
-            )}
-            <a href="/cbt-note/" style={{ ...CSS.headerTitle, textDecoration: "none" }}>思考記録</a>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {view === "new" && (
-              <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
-                {step + 1} / {totalSteps}　{STEP_LABELS[step]}
-              </span>
-            )}
-            <button
-              onClick={() => setMenuOpen(true)}
-              style={{ background: "none", border: "none", padding: "6px 8px", display: "flex", flexDirection: "column", gap: "5px", cursor: "pointer", position: "relative" }}
-              aria-label="メニューを開く"
-            >
-              {[0,1,2].map(i => (
-                <span key={i} style={{ display: "block", width: 22, height: 2, background: activeMoods.length > 0 ? "var(--accent)" : "var(--text-muted)", borderRadius: 2 }} />
-              ))}
-              {activeMoods.length > 0 && (
-                <span style={{
-                  position: "absolute", top: 2, right: 2,
-                  background: "var(--accent)", color: "#fff",
-                  borderRadius: "50%", width: 16, height: 16,
-                  fontSize: "0.65rem", fontWeight: 700,
-                  display: "flex", alignItems: "center", justifyContent: "center"
-                }}>{activeMoods.length}</span>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Progress bar (wizard only) */}
-        {view === "new" && (
-          <div style={{ height: 3, background: "var(--border)" }}>
-            <div style={{ height: "100%", width: `${progress}%`, background: "var(--accent)", transition: "width 0.3s ease" }} />
-          </div>
-        )}
-
-        {/* Content */}
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          {view === "home" && (
-            <HomeView records={records} onNew={startNew} onSelect={r => { setSelectedRecord(r); setView("detail"); }} activeMoods={activeMoods} />
+    <div className="app">
+      {/* Header */}
+      <div className="header">
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {(view === "new" || view === "detail") && (
+            <button onClick={() => setView("home")} style={{ background: "none", border: "none", fontSize: "1.2rem", color: "var(--text-muted)", padding: "0 4px" }}>←</button>
           )}
+          <a href="/cbt-note/" className="header-title" style={{ textDecoration: "none" }}>思考記録</a>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {view === "new" && (
-            <div style={{ padding: "20px 20px 80px" }}>
-              {step === 0 && <Step0 data={form} setData={setForm} />}
-              {step === 1 && <Step1 data={form} setData={setForm} customMoods={customMoods} setCustomMoods={saveCustomMoods} />}
-              {step === 2 && <Step2 data={form} setData={setForm} />}
-              {step === 3 && <Step3 data={form} setData={setForm} />}
-              {step === 4 && <Step4 data={form} setData={setForm} />}
-              {step === 5 && <Step5 data={form} setData={setForm} />}
-              {step === 6 && <Step6 data={form} setData={setForm} />}
-            </div>
+            <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
+              {step + 1} / {totalSteps}　{STEP_LABELS[step]}
+            </span>
           )}
-          {view === "detail" && selectedRecord && (
-            <RecordDetail record={selectedRecord} onBack={() => setView("home")} onDelete={() => deleteRecord(selectedRecord.id)} />
-          )}
+          <button
+            onClick={() => setMenuOpen(true)}
+            style={{ background: "none", border: "none", padding: "6px 8px", display: "flex", flexDirection: "column", gap: "5px", cursor: "pointer", position: "relative" }}
+            aria-label="メニューを開く"
+          >
+            {[0,1,2].map(i => (
+              <span key={i} style={{ display: "block", width: 22, height: 2, background: activeMoods.length > 0 ? "var(--accent)" : "var(--text-muted)", borderRadius: 2 }} />
+            ))}
+            {activeMoods.length > 0 && (
+              <span style={{
+                position: "absolute", top: 2, right: 2,
+                background: "var(--accent)", color: "#fff",
+                borderRadius: "50%", width: 16, height: 16,
+                fontSize: "0.65rem", fontWeight: 700,
+                display: "flex", alignItems: "center", justifyContent: "center"
+              }}>{activeMoods.length}</span>
+            )}
+          </button>
         </div>
+      </div>
 
-        {/* Float bar (wizard only) */}
+      {/* Progress bar (wizard only) */}
+      {view === "new" && (
+        <div style={{ height: 3, background: "var(--border)" }}>
+          <div style={{ height: "100%", width: `${progress}%`, background: "var(--accent)", transition: "width 0.3s ease" }} />
+        </div>
+      )}
+
+      {/* Content */}
+      <div style={{ maxWidth: 640, margin: "0 auto" }}>
+        {view === "home" && (
+          <HomeView records={records} onNew={startNew} onSelect={r => { setSelectedRecord(r); setView("detail"); }} activeMoods={activeMoods} />
+        )}
         {view === "new" && (
-          <div style={CSS.floatBar}>
-            <button onClick={() => step === 0 ? setView("home") : setStep(s => s - 1)}
-              style={{ ...CSS.btn, ...CSS.btnGhost }}>
-              {step === 0 ? "キャンセル" : "← 戻る"}
-            </button>
-            {step < totalSteps - 1
-              ? <button onClick={() => setStep(s => s + 1)} style={{ ...CSS.btn, ...CSS.btnPrimary }}>次へ →</button>
-              : <button onClick={handleSave} style={{ ...CSS.btn, ...CSS.btnPrimary, background: "var(--accent)" }}>💾 保存する</button>
-            }
+          <div style={{ padding: "20px 20px 80px" }}>
+            {step === 0 && <Step0 data={form} setData={setForm} />}
+            {step === 1 && <Step1 data={form} setData={setForm} customMoods={customMoods} setCustomMoods={saveCustomMoods} />}
+            {step === 2 && <Step2 data={form} setData={setForm} />}
+            {step === 3 && <Step3 data={form} setData={setForm} />}
+            {step === 4 && <Step4 data={form} setData={setForm} />}
+            {step === 5 && <Step5 data={form} setData={setForm} />}
+            {step === 6 && <Step6 data={form} setData={setForm} />}
           </div>
         )}
-
-        {/* Hamburger Drawer */}
-        {menuOpen && (
-          <HamburgerMenu
-            records={records}
-            onExport={handleExport}
-            onImport={handleImport}
-            onClose={() => setMenuOpen(false)}
-            activeMoods={activeMoods}
-            onMoodsChange={setActiveMoods}
-          />
+        {view === "detail" && selectedRecord && (
+          <RecordDetail record={selectedRecord} onBack={() => setView("home")} onDelete={() => deleteRecord(selectedRecord.id)} />
         )}
       </div>
-    </>
+
+      {/* Float bar (wizard only) */}
+      {view === "new" && (
+        <div className="float-bar">
+          <button onClick={() => step === 0 ? setView("home") : setStep(s => s - 1)}
+            className="btn btn-ghost">
+            {step === 0 ? "キャンセル" : "← 戻る"}
+          </button>
+          {step < totalSteps - 1
+            ? <button onClick={() => setStep(s => s + 1)} className="btn btn-primary">次へ →</button>
+            : <button onClick={handleSave} className="btn btn-primary" style={{ background: "var(--accent)" }}>💾 保存する</button>
+          }
+        </div>
+      )}
+
+      {/* Hamburger Drawer */}
+      {menuOpen && (
+        <HamburgerMenu
+          records={records}
+          onExport={handleExport}
+          onImport={handleImport}
+          onClose={() => setMenuOpen(false)}
+          activeMoods={activeMoods}
+          onMoodsChange={setActiveMoods}
+        />
+      )}
+    </div>
   );
 }
