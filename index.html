@@ -1,14 +1,171 @@
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="認知行動療法（CBT）の思考記録アプリ。気分・自動思考・適応的思考を記録して、考え方のクセを見直しましょう。" />
-    <title>思考記録 | CBT Note</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CBT Note は認知行動療法（CBT）の思考記録をブラウザで行える無料Webアプリです。気分・自動思考・適応的思考を記録して、考え方のクセを見直しましょう。" />
+  <meta property="og:title" content="CBT Note — 思考記録アプリ" />
+  <meta property="og:description" content="認知行動療法の思考記録を、ブラウザで手軽に。無料・登録不要・データはあなたのデバイスに保存。" />
+  <title>CBT Note — 思考を記録する、心を整える。</title>
+  <link rel="icon" href="/favicon.svg" />
+  <link rel="stylesheet" href="/src/assets/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/cbt-note/" class="nav-logo">📖 CBT Note</a>
+  <div class="nav-links">
+    <a href="/cbt-note/about/">CBTとは？</a>
+    <a href="/cbt-note/books/">おすすめ書籍</a>
+    <a href="/cbt-note/app/" class="nav-cta">アプリを使う→</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <span class="hero-eyebrow">認知行動療法 × 思考記録</span>
+  <h1>思考を記録する、<br><em>心を整える。</em></h1>
+  <p class="hero-sub">
+    CBT Note は、認知行動療法（CBT）の「思考記録」をブラウザで手軽に続けられる無料Webアプリです。
+    登録不要、データはあなたのデバイスに保存されます。
+  </p>
+  <div class="hero-actions">
+    <a href="/cbt-note/app/" class="btn-primary">▶ 今すぐ使う（無料）</a>
+    <a href="/cbt-note/about/" class="btn-ghost">CBTとは？</a>
+  </div>
+  <p class="hero-note">アカウント登録不要・完全無料・データはブラウザに保存</p>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <p class="section-label">FEATURES</p>
+  <div class="divider"></div>
+  <h2 class="section-title">CBT Note の特徴</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">🔒</span>
+      <h3>データはあなただけのもの</h3>
+      <p>入力した内容はすべてお使いのブラウザ（ローカルストレージ）に保存。外部サーバーには一切送信されません。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📋</span>
+      <h3>CBTの7ステップに沿った記録</h3>
+      <p>状況・気分・自動思考・根拠・反証・適応的思考・再評価の流れをウィザード形式でガイドします。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📊</span>
+      <h3>気分の変化を確認</h3>
+      <p>記録前後の気分レベルを比較できます。思考記録を続けることで、自分の感情パターンへの気づきが深まります。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📤</span>
+      <h3>CSVで管理・バックアップ</h3>
+      <p>記録はCSV形式でエクスポート・インポートが可能。大切なデータを安全に保管できます。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">💻</span>
+      <h3>PC・スマホどちらでも</h3>
+      <p>Webアプリなのでインストール不要。PCでじっくり入力も、スマホでサッと記録も、どちらにも対応しています。</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🆓</span>
+      <h3>完全無料・登録不要</h3>
+      <p>アカウント作成もメールアドレスの登録も不要。ページを開いてすぐに使い始められます。</p>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="steps-section">
+  <div class="steps-inner">
+    <p class="section-label">HOW IT WORKS</p>
+    <div class="divider"></div>
+    <h2 class="section-title">7ステップで思考記録</h2>
+    <div class="step-list">
+      <div class="step-item">
+        <div class="step-num">①</div>
+        <div>
+          <h4>状況</h4>
+          <p>いつ・どこで・だれが関わった出来事かを記録します。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">②</div>
+        <div>
+          <h4>気分</h4>
+          <p>そのときどんな気分を感じたか。気分の種類と強さ（0〜100%）を記録します。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">③</div>
+        <div>
+          <h4>自動思考</h4>
+          <p>気分を感じた直前に頭に浮かんだ考えやイメージを書き出します。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">④</div>
+        <div>
+          <h4>根拠</h4>
+          <p>自動思考を裏付ける客観的な事実を探します。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">⑤</div>
+        <div>
+          <h4>反証</h4>
+          <p>自動思考と矛盾する事実・別の見方を書き出します。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">⑥</div>
+        <div>
+          <h4>適応的思考</h4>
+          <p>根拠と反証を踏まえた、よりバランスの取れた考えを描きます。</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">⑦</div>
+        <div>
+          <h4>気分の再評価</h4>
+          <p>思考記録を経て、気分のレベルが変化したかを確認します。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKS LINK -->
+<section style="text-align:center; padding: 60px 24px; background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <p class="section-label">RECOMMENDED BOOKS</p>
+  <div class="divider"></div>
+  <h2 class="section-title">CBTをもっと深く学ぶ</h2>
+  <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 28px;">
+    認知行動療法の理解を深めるために役立つ書籍をまとめました。
+  </p>
+  <a href="/cbt-note/books/" class="btn-primary">📚 おすすめ書籍を見る →</a>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>今日から、思考記録を始めよう。</h2>
+  <p>登録不要・無料・すぐに使えます。</p>
+  <a href="/cbt-note/app/" class="btn-white">▶ アプリを開く</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="/">ホーム</a>
+    <a href="/cbt-note/about/">CBTとは？</a>
+    <a href="/cbt-note/books/">おすすめ書籍</a>
+    <a href="/cbt-note/privacy/">プライバシーポリシー</a>
+    <a href="/cbt-note/app/">アプリを使う</a>
+  </div>
+  <p>© 2025 CBT Note　このアプリは医療行為ではありません。深刻な悩みは専門家にご相談ください。</p>
+</footer>
+
+</body>
 </html>

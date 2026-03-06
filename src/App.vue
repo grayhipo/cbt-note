@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import './App.css';
 import { genId } from './utils';
 import HomeView from './components/HomeView.vue';
 import WizardView from './components/WizardView.vue';
