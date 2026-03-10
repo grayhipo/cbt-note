@@ -21,7 +21,7 @@ const emit = defineEmits(['back', 'delete']);
       <div style="display: flex; flex-direction: column; gap: 6px">
         <div v-if="record.situation.when"><span class="detail-label">📅 いつ　　</span>{{ formatWhen(record.situation.when) }}</div>
         <div v-if="record.situation.where"><span class="detail-label">📍 どこで　</span>{{ record.situation.where }}</div>
-        <div v-if="record.situation.who"><span class="detail-label">👤 だれが　</span>{{ record.situation.who }}</div>
+        <div v-if="record.situation.who"><span class="detail-label">👤 どんなとき　</span>{{ record.situation.who }}</div>
       </div>
     </div>
 
