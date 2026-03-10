@@ -86,7 +86,7 @@ watch(() => props.step, (newStep) => {
         <input type="text" v-model="form.situation.where" placeholder="例：職場の会議室" class="inp" style="display: block; border: 1.5px solid var(--border)" />
       </div>
       <div class="field-group">
-        <label class="lbl">👤 だれが</label>
+        <label class="lbl">👤 どんなとき</label>
         <input type="text" v-model="form.situation.who" placeholder="例：上司と二人で話していたとき" class="inp" style="display: block; border: 1.5px solid var(--border)" />
       </div>
     </div>
